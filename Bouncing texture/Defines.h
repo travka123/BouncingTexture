@@ -1,3 +1,3 @@
 #pragma once
 
-#define WHELL_SHIFT 10
+#define WHELL_FORCE 10

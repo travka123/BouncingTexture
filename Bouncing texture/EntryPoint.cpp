@@ -49,27 +49,27 @@ void MouseMove(short x, short y) {
 	game->input.mouseY = y;
 }
 
-void KeyDown(WPARAM keyCode) {
+void KeyStateChange(WPARAM keyCode, bool pressed) {
 	Game* game = Game::Instance();
 	switch (keyCode) {
 	case VK_UP:
 	case 0x57:
-		game->input.verticalMoving--;
+		game->input.moveUp = pressed;
 		break;
 
 	case VK_DOWN:
 	case 0x53:
-		game->input.verticalMoving++;
+		game->input.moveDown = pressed;
 		break;
 
 	case VK_LEFT:
 	case 0x41:
-		game->input.horizontalMoving--;
+		game->input.moveLeft = pressed;
 		break;
 
 	case VK_RIGHT:
 	case 0x44:
-		game->input.horizontalMoving++;
+		game->input.moveRight = pressed;
 		break;
 	}
 }
@@ -77,10 +77,10 @@ void KeyDown(WPARAM keyCode) {
 void MouseWheel(short rotation, short flags) {
 	Game* game = Game::Instance();
 	if (flags && MK_SHIFT) {
-		game->input.horizontalMoving -= rotation / WHEEL_DELTA * WHELL_SHIFT ;
+		game->input.horizontalScroll -= rotation / WHEEL_DELTA * WHELL_FORCE;
 	}
 	else {
-		game->input.verticalMoving -= rotation / WHEEL_DELTA * WHELL_SHIFT;
+		game->input.verticalScroll -= rotation / WHEEL_DELTA * WHELL_FORCE;
 	}
 }
 
@@ -95,8 +95,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		break;
 
 	case WM_KEYDOWN:
-		KeyDown(wParam);
+		KeyStateChange(wParam, true);
 		break;
+
+	case WM_KEYUP:
+		KeyStateChange(wParam, false);
 
 	case WM_MOUSEWHEEL:
 		MouseWheel(GET_WHEEL_DELTA_WPARAM(wParam), wParam & 0xFFFF);
