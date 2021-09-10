@@ -13,7 +13,9 @@ RECT FlatObject::_boarders;
 
 FlatObjectBehavior* FlatObject::behavior = new BouncingBehavior();
 
-void FlatObject::Move(float x, float y) {}
+void FlatObject::Move(float x, float y) {
+	behavior->Move(x, y);
+}
 
 bool FlatObject::IsTouching(int x, int y) {
 	return false;

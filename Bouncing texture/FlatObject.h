@@ -4,6 +4,7 @@
 
 #include "FlatObjectBehavior.h"
 #include "BouncingBehavior.h"
+#include "ControlingBehavior.h"
 
 static class FlatObject {
 public:
@@ -18,6 +19,7 @@ public:
 private:
 	friend class FlatObjectBehavior;
 	friend class BouncingBehavior;
+	friend class ControlingBehavior;
 
 	static FlatObjectBehavior* behavior;
 	static float _posX;

@@ -6,11 +6,12 @@ class BouncingBehavior : public FlatObjectBehavior {
 public:
 	BouncingBehavior();
 
+	void Move(float x, float y);
 	void Think();
 private:
-	int _speedX;
-	int _speedY;
+	float _speedX;
+	float _speedY;
 
-	void Move(float shiftX, float shiftY);
+	void BouncingMove(float shiftX, float shiftY);
 };
 

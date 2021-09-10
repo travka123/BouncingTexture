@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BouncingBehavior.cpp" />
+    <ClCompile Include="ControlingBehavior.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="FlatObject.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -27,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BouncingBehavior.h" />
+    <ClInclude Include="ControlingBehavior.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="EntryPoint.h" />
     <ClInclude Include="FlatObject.h" />
@@ -136,7 +138,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>

@@ -6,8 +6,8 @@ Input Game::input;
 bool Game::_isSelected;
 
 void Game::Think() {
-	float horizontalMove = (input.moveRight - input.moveLeft + input.horizontalScroll) * MOVE_SPEED / TARGET_FPS;
-	float verticalMove = (input.moveDown - input.moveUp + input.verticalScroll) * MOVE_SPEED / TARGET_FPS;
+	float horizontalMove = (input.moveRight - input.moveLeft + input.horizontalScroll) * CONTROL_SPEED / TARGET_FPS;
+	float verticalMove = (input.moveDown - input.moveUp + input.verticalScroll) * CONTROL_SPEED / TARGET_FPS;
 
 	RECT oldRect, newRect, invalideRect;
 	FlatObject::GetRect(&oldRect);
@@ -25,6 +25,9 @@ void Game::Think() {
 	invalideRect.bottom = oldRect.bottom > newRect.bottom ? oldRect.bottom : newRect.bottom;
 
 	Render::Invalidate(&invalideRect);
+
+	input.horizontalScroll = 0;
+	input.verticalScroll = 0;
 }
 
 void Game::Click(int x, int y) {
