@@ -1,16 +1,21 @@
 #pragma once
 
 #include "Input.h"
+#include "FlatObject.h"
 
-class Game {
+static class Game {
 public:
-	Game();
-
-	Input input;
-
-	static Game* Instance();
+	static Input input;
+	
+	static void Think();
+	static void Click(int x, int y);
+	static void Relised();
+	static void SetBoarders(RECT rect);
+	static void SetHWND(HWND hWnd);
+	static void Redraw(PAINTSTRUCT* ps);
+	static void SetBitmap(HBITMAP bitmap);
 
 private:
-	static Game* _instance;
+	static bool _isSelected;
 };
 

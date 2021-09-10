@@ -3,6 +3,9 @@
 
 #include "Defines.h"
 #include "Game.h"
+#include "EntryPoint.h"
+
+#define IDT_TIMER1 1
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -31,12 +34,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0,
 		CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
 
+	SetTimer(hWnd, IDT_TIMER1, 1000 / TARGET_FPS, nullptr);
+
+	Game::SetHWND(hWnd);
+
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	Game::SetBoarders(rect);
+
+	Game::SetBitmap((HBITMAP)LoadImage(hInstance, L"Media\\bitmap.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE));
+
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0)) {
-		TranslateMessage(&msg);
+		//TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
 
@@ -44,51 +57,71 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 }
 
 void MouseMove(short x, short y) {
-	Game* game = Game::Instance();
-	game->input.mouseX = x;
-	game->input.mouseY = y;
+	Game::input.mouseX = x;
+	Game::input.mouseY = y;
 }
 
 void KeyStateChange(WPARAM keyCode, bool pressed) {
-	Game* game = Game::Instance();
 	switch (keyCode) {
 	case VK_UP:
 	case 0x57:
-		game->input.moveUp = pressed;
+		Game::input.moveUp = pressed;
 		break;
 
 	case VK_DOWN:
 	case 0x53:
-		game->input.moveDown = pressed;
+		Game::input.moveDown = pressed;
 		break;
 
 	case VK_LEFT:
 	case 0x41:
-		game->input.moveLeft = pressed;
+		Game::input.moveLeft = pressed;
 		break;
 
 	case VK_RIGHT:
 	case 0x44:
-		game->input.moveRight = pressed;
+		Game::input.moveRight = pressed;
 		break;
 	}
 }
 
 void MouseWheel(short rotation, short flags) {
-	Game* game = Game::Instance();
 	if (flags && MK_SHIFT) {
-		game->input.horizontalScroll -= rotation / WHEEL_DELTA * WHELL_FORCE;
+		Game::input.horizontalScroll -= rotation / WHEEL_DELTA * WHELL_FORCE;
 	}
 	else {
-		game->input.verticalScroll -= rotation / WHEEL_DELTA * WHELL_FORCE;
+		Game::input.verticalScroll -= rotation / WHEEL_DELTA * WHELL_FORCE;
 	}
+}
+
+void MouseLBDown(short x, short y) {
+	Game::Click(x, y);
+}
+
+void MouseLBUp() {
+	Game::Relised();
+}
+
+void OnTick() {
+	Game::Think();
+}
+
+void Paint(HWND hWnd) {
+	PAINTSTRUCT ps;
+	BeginPaint(hWnd, &ps);
+	Game::Redraw(&ps);
+	EndPaint(hWnd, &ps);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
-	case WM_DESTROY:
-		PostQuitMessage(0);
+	
+	case WM_TIMER:
+		OnTick();
 		break;
+
+	case WM_PAINT:
+		Paint(hWnd);
 
 	case WM_MOUSEMOVE:
 		MouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -103,6 +136,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 	case WM_MOUSEWHEEL:
 		MouseWheel(GET_WHEEL_DELTA_WPARAM(wParam), wParam & 0xFFFF);
+		break;
+
+	case WM_LBUTTONDOWN:
+		MouseLBDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		break;
+
+	case WM_LBUTTONUP:
+	case WM_MOUSELEAVE:
+		MouseLBUp();
+		break;
+
+	case WM_DESTROY:
+		PostQuitMessage(0);
 		break;
   
 	default:
