@@ -8,6 +8,7 @@ public:
 	ControlingBehavior();
 
 	void Move(float x, float y);
+	void Clicked();
 	void Think();
 
 private:

@@ -5,6 +5,7 @@
 #pragma comment(lib, "Msimg32.lib")
 
 #include "FlatObject.h"
+#include "Defines.h"
 
 HWND Render::_hWnd;
 HBITMAP Render::_bitmap;
@@ -64,4 +65,17 @@ void Render::SetBitmap(HBITMAP bitmap) {
 	_bitmap = bitmap;
 	_width = bmpData.bmWidth;
 	_height = bmpData.bmHeight;
+}
+
+bool Render::IsTouching(int x, int y)
+{
+	HDC hDC = GetDC(_hWnd);
+	COLORREF color = GetPixel(hDC, x, y);
+	ReleaseDC(_hWnd, hDC);
+	return color != 0xFFFFFF;
+}
+
+void Render::ClientRect(RECT* prect)
+{
+	GetClientRect(_hWnd, prect);
 }

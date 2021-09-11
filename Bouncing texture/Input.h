@@ -10,5 +10,6 @@ public:
 	int horizontalScroll;
 	short mouseX;
 	short mouseY;
+	bool resized;
 };
 

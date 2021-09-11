@@ -3,7 +3,6 @@
 
 #include "Defines.h"
 #include "Game.h"
-#include "EntryPoint.h"
 
 #define IDT_TIMER1 1
 
@@ -57,8 +56,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 }
 
 void MouseMove(short x, short y) {
-	Game::input.mouseX = x;
-	Game::input.mouseY = y;
+		Game::input.mouseX = x;
+		Game::input.mouseY = y;
 }
 
 void KeyStateChange(WPARAM keyCode, bool pressed) {
@@ -113,6 +112,10 @@ void Paint(HWND hWnd) {
 	EndPaint(hWnd, &ps);
 }
 
+void Resized() {
+	Game::input.resized = true;
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 	
@@ -122,6 +125,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 	case WM_PAINT:
 		Paint(hWnd);
+		break;
 
 	case WM_MOUSEMOVE:
 		MouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -133,6 +137,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 	case WM_KEYUP:
 		KeyStateChange(wParam, false);
+		break;
 
 	case WM_MOUSEWHEEL:
 		MouseWheel(GET_WHEEL_DELTA_WPARAM(wParam), wParam & 0xFFFF);
@@ -143,12 +148,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		break;
 
 	case WM_LBUTTONUP:
-	case WM_MOUSELEAVE:
 		MouseLBUp();
 		break;
 
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		break;
+
+	case WM_SIZE:
+		Resized();
 		break;
   
 	default:

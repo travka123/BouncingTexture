@@ -2,6 +2,7 @@
 
 #include "FlatObject.h"
 #include "BouncingBehavior.h"
+#include "DragingBehavior.h"
 
 int ControlingBehavior::_ticksBeforeBouncing = 180;
 
@@ -46,6 +47,12 @@ void ControlingBehavior::Move(float x, float y)
 		}
 	}
 	_ticksBeforeBouncingLeft = _ticksBeforeBouncing;
+}
+
+void ControlingBehavior::Clicked()
+{
+	FlatObject::behavior = new DragingBehavior();
+	delete this;
 }
 
 void ControlingBehavior::Think()

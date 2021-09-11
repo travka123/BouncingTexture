@@ -5,9 +5,18 @@
 Input Game::input;
 bool Game::_isSelected;
 
+short Game::_lastMouseX = 0;
+short Game::_lastMouseY = 0;
+
+int Game::_normMouseX = 0;
+int Game::_normMouseY = 0;
+
 void Game::Think() {
 	float horizontalMove = (input.moveRight - input.moveLeft + input.horizontalScroll) * CONTROL_SPEED / TARGET_FPS;
 	float verticalMove = (input.moveDown - input.moveUp + input.verticalScroll) * CONTROL_SPEED / TARGET_FPS;
+
+	input.horizontalScroll = 0;
+	input.verticalScroll = 0;
 
 	RECT oldRect, newRect, invalideRect;
 	FlatObject::GetRect(&oldRect);
@@ -15,6 +24,21 @@ void Game::Think() {
 	if (horizontalMove || verticalMove) {
 		FlatObject::Move(horizontalMove, verticalMove);
 	}
+
+	if (_isSelected && ((_lastMouseX != input.mouseX) || (_lastMouseY != input.mouseY))) {
+		FlatObject::MouseMove(input.mouseX - _normMouseX, input.mouseY - _normMouseY);
+	}
+
+	_lastMouseX = input.mouseX;
+	_lastMouseY = input.mouseY;
+
+	if (input.resized) {
+		RECT clientRect;
+		Render::ClientRect(&clientRect);
+		FlatObject::SetBoarders(clientRect);
+	}
+	input.resized = false;
+	
 	FlatObject::Think();
 
 	FlatObject::GetRect(&newRect);
@@ -24,16 +48,22 @@ void Game::Think() {
 	invalideRect.top = oldRect.top < newRect.top ? oldRect.top : newRect.top;
 	invalideRect.bottom = oldRect.bottom > newRect.bottom ? oldRect.bottom : newRect.bottom;
 
-	Render::Invalidate(&invalideRect);
+	
 
-	input.horizontalScroll = 0;
-	input.verticalScroll = 0;
+	
+
+	Render::Invalidate(&invalideRect);
 }
 
 void Game::Click(int x, int y) {
-	if (FlatObject::IsTouching(x, y)) {
+	if (Render::IsTouching(x, y)) {
 		_isSelected = true;
 		FlatObject::Clicked();
+
+		RECT rect;
+		FlatObject::GetRect(&rect);
+		_normMouseX = x - rect.left;
+		_normMouseY = y - rect.top;
 	}
 }
 

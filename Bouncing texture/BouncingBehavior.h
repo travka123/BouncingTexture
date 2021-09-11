@@ -8,6 +8,7 @@ public:
 
 	void Move(float x, float y);
 	void Think();
+	void Clicked();
 private:
 	float _speedX;
 	float _speedY;

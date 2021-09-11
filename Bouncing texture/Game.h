@@ -17,5 +17,9 @@ public:
 
 private:
 	static bool _isSelected;
+	static short _lastMouseX;
+	static short _lastMouseY;
+	static int _normMouseX;
+	static int _normMouseY;
 };
 

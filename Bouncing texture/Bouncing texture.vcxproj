@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="BouncingBehavior.cpp" />
     <ClCompile Include="ControlingBehavior.cpp" />
+    <ClCompile Include="DragingBehavior.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="FlatObject.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -30,7 +31,7 @@
     <ClInclude Include="BouncingBehavior.h" />
     <ClInclude Include="ControlingBehavior.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="EntryPoint.h" />
+    <ClInclude Include="DragingBehavior.h" />
     <ClInclude Include="FlatObject.h" />
     <ClInclude Include="FlatObjectBehavior.h" />
     <ClInclude Include="Game.h" />

@@ -8,6 +8,8 @@ public:
 	static void Redraw(PAINTSTRUCT* pps);
 	static void SetHWND(HWND _hWnd);
 	static void SetBitmap(HBITMAP bitmap);
+	static bool IsTouching(int x, int y);
+	static void ClientRect(RECT* prect);
 
 private:
 	static HWND _hWnd;

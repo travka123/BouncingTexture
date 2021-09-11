@@ -8,11 +8,12 @@
 #include "Defines.h"
 #include "FlatObject.h"
 #include "ControlingBehavior.h"
+#include "DragingBehavior.h"
 
 BouncingBehavior::BouncingBehavior() {
 	srand(time(nullptr));
-	int rint = rand();
-	_speedX = (float)rint / RAND_MAX * BOUNCING_SPEED;
+	int rint = rand() % 200;
+	_speedX = (float)rint / 200 * BOUNCING_SPEED;
 	_speedY = sqrt(BOUNCING_SPEED * BOUNCING_SPEED - _speedX * _speedX);
 	switch (rint % 4) {
 	case 1:
@@ -31,10 +32,17 @@ void BouncingBehavior::Move(float x, float y)
 {
 	FlatObject::behavior = new ControlingBehavior();
 	delete this;
+	FlatObject::behavior->Move(x, y);
 }
 
 void BouncingBehavior::Think() {
 	BouncingMove(_speedX, _speedY);
+}
+
+void BouncingBehavior::Clicked()
+{
+	FlatObject::behavior = new DragingBehavior();
+	delete this;
 }
 
 void BouncingBehavior::BouncingMove(float shiftX, float shiftY) {

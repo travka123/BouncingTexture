@@ -17,17 +17,27 @@ void FlatObject::Move(float x, float y) {
 	behavior->Move(x, y);
 }
 
-bool FlatObject::IsTouching(int x, int y) {
-	return false;
-}
-
 void FlatObject::SetBoarders(RECT boarders) {
+	if (_posX + _width > boarders.right) {
+		_posX = boarders.right - _width;
+		_posX = (_posX < 0) ? 0 : _posX;
+	}
+
+	if (_posY + _height > boarders.bottom) {
+		_posY = boarders.bottom - _height;
+		_posY = (_posY < 0) ? 0 : _posY;
+	}
+
 	_boarders = boarders;
 }
 
-void FlatObject::Clicked() {}
+void FlatObject::Clicked() {
+	behavior->Clicked();
+}
 
-void FlatObject::Released() {}
+void FlatObject::Released() {
+	behavior->Released();
+}
 
 void FlatObject::GetRect(RECT* rect) {
 	rect->left = _posX;
@@ -38,4 +48,9 @@ void FlatObject::GetRect(RECT* rect) {
 
 void FlatObject::Think() {
 	behavior->Think();
+}
+
+void FlatObject::MouseMove(int x, int y)
+{
+	behavior->MouseMove(x, y);
 }
